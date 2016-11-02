@@ -1,0 +1,12 @@
+#七牛图片上传DEMO
+
+#1.七牛相关获得
+    * 创建空间，获得临时域名 : og0g4mpae.bkt.clouddn.com
+    * 获得临时上传key : 7NlihBpbgq2sZlghFhfXQaDdbSbNylnc2fPBl7Os
+    * AS 集成 七牛相关 SDK
+        ```
+        compile 'com.qiniu:qiniu-android-sdk:7.2.+'
+
+        ```
+
+#2.
