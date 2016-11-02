@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.qiniu.common.QiniuException;
@@ -151,10 +152,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * 加水印的图片地址
+     * @return
+     */
+    private String getOtherImageURL(){
+        String fix="?watermark/2/text/5Y6f5bCP5piO/font/5a6L5L2T/fontsize/700/fill/IzE3RTcyOA==/dissolve/100/gravity/Center";
+        String URL="http://og0g4mpae.bkt.clouddn.com/";
+        return URL+keyName+fix;
+    }
+
+    /**
      * 加载
      */
     private void onLoadImage() {
-
+        if(keyName!=null) {
+            Glide.with(this).load(getOtherImageURL()).into(ivImage);
+        }else{
+            showToast("请先拍照！后上传,再加载");
+        }
     }
 
     /**
@@ -164,13 +179,14 @@ public class MainActivity extends AppCompatActivity {
         if(bm!=null) {
             new Thread(new UploadRunnable(fileUtil.getStorageDirectory() + File.separator + fileName,handler)).start();
         }else{
-            showToast("请先拍照！后上传");
+            showToast("请先拍照！后上传,再加载");
         }
     }
 
     private void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -186,6 +202,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * 上传的runnable接口
+     */
     private class UploadRunnable implements Runnable {
 
         private String path;
