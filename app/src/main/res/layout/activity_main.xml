@@ -23,7 +23,7 @@
         android:id="@+id/tv_process"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/text_now_process"/>
+       />
 
     <Button
         android:id="@+id/btn_load"

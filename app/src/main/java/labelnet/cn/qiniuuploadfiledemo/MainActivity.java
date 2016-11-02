@@ -3,6 +3,8 @@ package labelnet.cn.qiniuuploadfiledemo;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,6 +20,9 @@ import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,8 +40,32 @@ public class MainActivity extends AppCompatActivity {
     private UploadManager uploadManager;
     private FileUtil fileUtil;
     private Bitmap bm;
-    private String keyName = "image";
+    private String keyName;
     private String fileName = "image.jpg";
+    private Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+
+            switch (msg.what){
+                case 0:
+                    tvProcess.setText("上传失败");
+                    showToast("上传失败");
+                    break;
+                case 1:
+                    tvProcess.setText("上传成功");
+                    showToast("上传成功 : "+(msg.obj).toString());
+                    try {
+                        JSONObject jsonObj=new JSONObject((String) msg.obj);
+                        keyName= (String) jsonObj.get("key");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+
+            super.handleMessage(msg);
+        }
+    };
 
     //---
     private Button btnUp, btnLoad, btnCamera;
@@ -133,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void onUploadImage() {
         if(bm!=null) {
-            new Thread(new UploadRunnable(fileUtil.getStorageDirectory() + File.separator + fileName)).start();
+            new Thread(new UploadRunnable(fileUtil.getStorageDirectory() + File.separator + fileName,handler)).start();
         }else{
             showToast("请先拍照！后上传");
         }
@@ -160,32 +189,38 @@ public class MainActivity extends AppCompatActivity {
     private class UploadRunnable implements Runnable {
 
         private String path;
+        private Handler handler;
 
-        public UploadRunnable(String path) {
+        public UploadRunnable(String path, Handler handler) {
             this.path = path;
+            this.handler = handler;
         }
 
         @Override
         public void run() {
             Response res = null;
+            Message msg=handler.obtainMessage();
             try {
-                res = uploadManager.put(path, "image", getToken());
+                res = uploadManager.put(path,null, getToken());
                 Log.v("MAIN", res.bodyString());
+
                 if(res.isOK()){
-                    showToast("上传成功");
+                    msg.what=1;
+                    msg.obj=res.bodyString();
                 }else{
-                    showToast("上传失败");
+                    msg.what=0;
                 }
 
             } catch (QiniuException e) {
                 e.printStackTrace();
                 try {
                     Log.v("MAIN", e.response.bodyString());
-                    showToast("上传失败");
+                    msg.what=0;
                 } catch (QiniuException e1) {
 
                 }
             }
+            handler.sendMessage(msg);
 
         }
     }
