@@ -8,4 +8,4 @@
  [下载地址](http://og0g4mpae.bkt.clouddn.com/app-debug.apk)
 
 #扫码下载
- ![扫码](http://og0g4mpae.bkt.clouddn.com/1478096956.png "二维码")
+ ![](http://og0g4mpae.bkt.clouddn.com/1478096956.png)
