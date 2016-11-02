@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">QiNiuUploadFileDemo</string>
+    <string name="btn_text_up">上传</string>
+
+    <string name="text_now_process">进度：$1%s</string>
+
+    <string name="btn_text_down">加载</string>
 </resources>
