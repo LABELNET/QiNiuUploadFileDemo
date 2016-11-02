@@ -29,5 +29,5 @@ dependencies {
 
 
     //七牛相关 SDK
-    compile 'com.qiniu:qiniu-android-sdk:7.2.+'
+    compile 'com.qiniu:qiniu-java-sdk:7.1.+'
 }
