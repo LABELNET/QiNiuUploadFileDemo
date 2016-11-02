@@ -8,6 +8,12 @@
    >
 
     <Button
+        android:id="@+id/btn_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_text_camera"/>
+
+    <Button
         android:id="@+id/btn_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
